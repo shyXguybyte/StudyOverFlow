@@ -10,6 +10,7 @@ namespace StudyOverFlow.API.Model
         public int ListOrder { get; set; }  
         public string UserId { get; set; } 
         public ApplicationUser User { get; set; }  
-        public List<TodoKanbanList> TodoKanbanLists { get; set; }   
+        public List<TaskKanbanList> TaskKanbanLists { get; set; }
+        public List<Event> Events { get; set; }
     }
 }

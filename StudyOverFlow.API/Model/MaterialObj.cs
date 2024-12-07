@@ -9,8 +9,8 @@
         public DateTime Date { get; set; }      
         public string? Type { get; set; }
         public double? size { get; set; }
-        public int? TodoId { get; set; }    
-        public Todo? Todo { get; set; } 
+        public int? TaskId { get; set; }    
+        public Task? Task { get; set; } 
         public int? SubjectId { get; set; }     
         public Subject? Subject { get; set; }    
     }

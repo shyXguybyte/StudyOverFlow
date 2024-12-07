@@ -13,8 +13,9 @@ namespace StudyOverFlow.API.Model
         
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
-        public List<Todo> Todos { get; set; }
+        public List<Task> Tasks { get; set; }
         public List<Note> Notes { get; set; }   
         public List<MaterialObj> MaterialObjs { get; set; }
+        public List<Event> Events { get; set; }
     }
 }

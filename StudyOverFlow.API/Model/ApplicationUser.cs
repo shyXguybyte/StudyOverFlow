@@ -7,8 +7,14 @@ namespace StudyOverFlow.API.Model
         public string FirstName { get; set; }   
         public string LastName { get; set; }    
         public List<Subject> Subjects { get; set; }
-        public List<Todo> Todos { get; set; }
+        public List<Task> Tasks { get; set; }
         public List<KanbanList> KanbanLists { get; set; }
+        public Calendar Calendar { get; set; }
         public List<langchain_pg_embedding> Embeddings { get; set; }   
+
+        public string FullName()
+        {
+            return FirstName+ " "+ LastName;
+        }
     }
 }
