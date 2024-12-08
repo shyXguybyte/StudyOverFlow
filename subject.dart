@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'navBar.dart';
 import 'kanban.dart';
+
 class Subjects extends StatefulWidget {
   const Subjects({super.key});
 
@@ -25,23 +27,26 @@ class _Subjects extends State<Subjects> {
     ]);
   }
 
-  //Nav bar widget
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Subjects',style: TextStyle( fontWeight: FontWeight.bold, color: Colors.white),),
+        title: const Text(
+          'Subjects',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Row(
         children: [
           Column(children: [
-            subject("Machine Learning", "This subject is about machine learning models"),
-            subject("Software Engineering", "This subject is about how to make software"),
+            subject("Machine Learning",
+                "This subject is about machine learning models"),
+            subject("Software Engineering",
+                "This subject is about how to make software"),
           ]),
           const SizedBox(width: 10),
           Column(
@@ -59,10 +64,6 @@ class _Subjects extends State<Subjects> {
               subject("Data Science", " "),
             ],
           ),
-
-          ElevatedButton(onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Kanban()));
-          }, child: const Text('Kanban'))
         ],
       ),
     );

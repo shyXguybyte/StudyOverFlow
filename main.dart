@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'subject.dart';
+import 'navBar.dart';
 void main() => runApp(const MainApp());
 
 class MainApp extends StatelessWidget {
@@ -7,8 +7,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: const Subjects(),
+      home: const NavBar(),
     );
   }
 }
