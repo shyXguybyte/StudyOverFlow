@@ -16,6 +16,6 @@ Contains some boards each board has it's title and contain some tasks that is re
 ### Subjects
 Contains the subjects that the user have added 
 #### Functions
-1- User can add subjects (Undon)
-2- User can delete subjects (Undon)
-3- When user press the subjects button it's transfer him to the material and notes of the subject
+1- User can add subjects (Undon)\
+2- User can delete subjects (Undon)\
+3- When user press the subjects button it's transfer him to the material and notes of the subject\
