@@ -6,7 +6,7 @@ The code in this branch is for the Kanban and Subjects pages
 ### Kanban
 Contains some boards each board has it's title and contain some tasks that is related to it
 #### Functions
-1- User can add board
+1- User can add board\n
 2- User can change the title of the board
 3- User can delete board
 4- User can add task to specific board
