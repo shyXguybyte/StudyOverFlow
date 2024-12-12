@@ -1,7 +1,8 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:home_function/Colors.dart';
+import 'package:home_function/utils/Colors.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 void main() {
@@ -49,6 +50,64 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+void calendarTapped(CalendarTapDetails details) {
+  if (details.targetElement == CalendarElement.appointment ||
+      details.targetElement == CalendarElement.agenda) {
+    // Assuming your Appointment details and variables are the same
+    final Appointment appointmentDetails = details.appointments![0];
+    final String subject = appointmentDetails.subject;
+    final String dateText = DateFormat('MMMM dd, yyyy')
+        .format(appointmentDetails.startTime)
+        .toString();
+    final String startTimeText =
+        DateFormat('hh:mm a').format(appointmentDetails.startTime).toString();
+    final String endTimeText =
+        DateFormat('hh:mm a').format(appointmentDetails.endTime).toString();
+    final String timeDetails =  '$startTimeText - $endTimeText';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(subject),
+          content: SizedBox(
+            height: 80,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  dateText,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 10), // Adding spacing between elements
+                Text(
+                  timeDetails,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,18 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
         headerHeight: 30,
         todayHighlightColor: Color.fromARGB(255, 68, 140, 255),
         viewNavigationMode: ViewNavigationMode.none,
-        //specialRegions: [],
-        //cellBorderColor: Colors.black,
-        // backgroundColor: Colors.black,
         showCurrentTimeIndicator: false,
-        //  showNavigationArrow: true,
         headerStyle: CalendarHeaderStyle(
-            //  textStyle: TextStyle(color: Colors.red, fontSize: 20),
-            textAlign: TextAlign.start,
-            backgroundColor: Colors.white),
-        // viewHeaderStyle: ViewHeaderStyle(
-        //  // backgroundColor: Colors.grey
-        //  ),
+            textAlign: TextAlign.start, backgroundColor: Colors.white),
         selectionDecoration: BoxDecoration(
           color: Colors.transparent,
           border: Border.all(
@@ -105,17 +155,17 @@ class _MyHomePageState extends State<MyHomePage> {
         timeSlotViewSettings: TimeSlotViewSettings(
           startHour: 8,
           endHour: 24,
-          // timeInterval: Duration(hours: 0, minutes: 30),
           timeIntervalHeight: 80,
-          // timeRulerSize: 50,
           timeFormat: 'h a',
           dateFormat: 'd',
           dayFormat: 'E',
         ),
+        onTap: calendarTapped,
       ),
     );
   }
 }
+
 
 class AddAppointmentDialog extends StatefulWidget {
   @override
@@ -125,7 +175,7 @@ class AddAppointmentDialog extends StatefulWidget {
 class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
   final _titleController = TextEditingController();
   final _startHourController = TextEditingController();
-  final _startMinuteController = TextEditingController(); // NEW: For minutes
+  final _startMinuteController = TextEditingController();
   final _durationController = TextEditingController();
   DateTime _selectedDay = DateTime(2024, 12, 8);
   Color _selectedColor = electricBlue;
@@ -142,14 +192,13 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
               controller: _titleController,
               decoration: InputDecoration(hintText: "Title"),
             ),
-            // Replaced the dropdown for WeekDays with a Date Picker Button
             TextButton(
               onPressed: () async {
                 final selectedDate = await showDatePicker(
                   context: context,
                   initialDate: _selectedDay,
-                  firstDate: DateTime(2024), // Start range for date selection
-                  lastDate: DateTime(2025), // End range for date selection
+                  firstDate: DateTime(2024),
+                  lastDate: DateTime(2025),
                 );
                 if (selectedDate != null) {
                   setState(() {
@@ -158,17 +207,17 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
                 }
               },
               child: Text(
-                "📍Select Date: ${_selectedDay.toLocal().toString().split(' ')[0]}",
+                "📍 Select Date: ${_selectedDay.toLocal().toString().split(' ')[0]}",
               ),
               iconAlignment: IconAlignment.end,
             ),
             TextField(
               controller: _startHourController,
-              decoration: InputDecoration(hintText: "Start Hour (0-23)"),
+              decoration: InputDecoration(hintText: "Start Hour (8-11)"),
               keyboardType: TextInputType.number,
             ),
             TextField(
-              controller: _startMinuteController, // NEW: For minute input
+              controller: _startMinuteController,
               decoration: InputDecoration(hintText: "Start Minute (0-59)"),
               keyboardType: TextInputType.number,
             ),
@@ -248,15 +297,48 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
         ElevatedButton(
           onPressed: () {
             final title = _titleController.text;
-            final startHour = int.tryParse(_startHourController.text) ?? 0;
+            final startHour = int.tryParse(_startHourController.text);
             final startMinute = int.tryParse(_startMinuteController.text) ?? 0;
             final duration = int.tryParse(_durationController.text) ?? 1;
-            // Check if the title is empty
+
             if (title.isEmpty) {
-              // Show an error message
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Event name cannot be empty!"),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+
+            if (startHour == null || startHour < 0 || startHour > 23) {
+              // Show error if the start hour is invalid
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Please enter a valid start hour (8-23)!"),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+
+            if (startMinute < 0 || startMinute > 59) {
+              // Show error if the start minute is invalid
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Please enter a valid start minute (0-59)!"),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+
+            if (duration < 0) {
+              // Show error if the duration is invalid (should be greater than 0)
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content:
+                      Text("Please enter a valid duration (greater than 0)!"),
                   backgroundColor: Colors.red,
                 ),
               );
