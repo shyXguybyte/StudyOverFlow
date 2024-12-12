@@ -146,9 +146,9 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
                 }
               },
               child: Text(
-                "Selected Date: ${_selectedDay.toLocal().toString().split(' ')[0]}",
+                "📍Select Date: ${_selectedDay.toLocal().toString().split(' ')[0]}",
               ),
-              iconAlignment: IconAlignment.start,
+              iconAlignment: IconAlignment.end,
             ),
             TextField(
               controller: _startHourController,
