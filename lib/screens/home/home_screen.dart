@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:home_function/constants/calendar_settings.dart';
+import 'package:home_function/models/meeting_data_source.dart';
 import 'package:home_function/utils/Colors.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -408,9 +409,5 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
   }
 }
 
-class MeetingDataSource extends CalendarDataSource {
-  MeetingDataSource(List<Appointment> source) {
-    appointments = source;
-  }
-}
+
 
