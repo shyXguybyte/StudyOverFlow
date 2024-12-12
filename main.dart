@@ -29,18 +29,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Appointment> _appointments = [
-    Appointment(
-      startTime: DateTime.now(),
-      endTime: DateTime.now().add(Duration(hours: 2)),
-      subject: 'Test Event',
-      color: Colors.green,
-    ),
-    Appointment(
-      startTime: DateTime.now().add(Duration(hours: 2)),
-      endTime: DateTime.now().add(Duration(hours: 4)),
-      subject: 'Test Event 2',
-      color: const Color.fromARGB(255, 86, 76, 175),
-    ),
+    // Appointment(
+    //   startTime: DateTime.now(),
+    //   endTime: DateTime.now().add(Duration(hours: 2)),
+    //   subject: 'Test Event',
+    //   color: Colors.green,
+    // ),
+    // Appointment(
+    //   startTime: DateTime.now().add(Duration(hours: 2)),
+    //   endTime: DateTime.now().add(Duration(hours: 4)),
+    //   subject: 'Test Event 2',
+    //   color: const Color.fromARGB(255, 86, 76, 175),
+    // ),
   ];
 
   void _addAppointment(Appointment appointment) {
@@ -53,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text("Calendar"),
         actions: [
           IconButton(
@@ -70,9 +71,30 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: SfCalendar(
-        allowViewNavigation: false,
         view: CalendarView.week,
         firstDayOfWeek: 6,
+        headerHeight: 30,
+        todayHighlightColor: Color.fromARGB(255, 68, 140, 255),
+        viewNavigationMode: ViewNavigationMode.none,
+        //specialRegions: [],
+        //cellBorderColor: Colors.black,
+        // backgroundColor: Colors.black,
+        showCurrentTimeIndicator: false,
+        //  showNavigationArrow: true,
+        headerStyle: CalendarHeaderStyle(
+            //  textStyle: TextStyle(color: Colors.red, fontSize: 20),
+            textAlign: TextAlign.start,
+            backgroundColor: Colors.white),
+        // viewHeaderStyle: ViewHeaderStyle(
+        //  // backgroundColor: Colors.grey
+        //  ),
+        selectionDecoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border.all(
+              color: const Color.fromARGB(255, 68, 140, 255), width: 2),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          shape: BoxShape.rectangle,
+        ),
         dataSource: MeetingDataSource(_appointments),
         appointmentTextStyle: const TextStyle(
           fontSize: 7,
@@ -80,30 +102,20 @@ class _MyHomePageState extends State<MyHomePage> {
           letterSpacing: 1,
           fontWeight: FontWeight.bold,
         ),
+        timeSlotViewSettings: TimeSlotViewSettings(
+          startHour: 8,
+          endHour: 24,
+          // timeInterval: Duration(hours: 0, minutes: 30),
+          timeIntervalHeight: 80,
+          // timeRulerSize: 50,
+          timeFormat: 'h a',
+          dateFormat: 'd',
+          dayFormat: 'E',
+        ),
       ),
     );
   }
 }
-
-enum WeekDays {
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday,
-}
-
-int WeekDaysAsnum = [
-  DateTime.now(),
-  DateTime.now() as int,
-  DateTime.wednesday,
-  DateTime.thursday,
-  DateTime.friday,
-  DateTime.saturday,
-  DateTime.sunday
-] as int;
 
 class AddAppointmentDialog extends StatefulWidget {
   @override
@@ -244,7 +256,7 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
               // Show an error message
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Event title cannot be empty."),
+                  content: Text("Event name cannot be empty!"),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -273,13 +285,6 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
         ),
       ],
     );
-  }
-}
-
-extension StringExtensions on String {
-  String capitalize() {
-    if (this.isEmpty) return this;
-    return this[0].toUpperCase() + substring(1).toLowerCase();
   }
 }
 
