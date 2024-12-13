@@ -4,7 +4,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 class CalendarSettings {
   static final defaultSettings = {
     /** THESE 3 WILL BE FOUND IN THE MAIN FILE WHERE SfCalendar() EXISTS
-     * view: CalendarView.week,
+          view: CalendarView.week,
           dataSource: MeetingDataSource(_appointments),
           onTap: calendarTapped,
     */

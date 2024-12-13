@@ -50,14 +50,36 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
             TextButton(
                 onPressed: () async {
                   final selectedTime = await showTimePicker(
-                      context: context, initialTime: _selectedTime);
-                  if (selectedTime != null) {
+                    context: context,
+                    initialTime: _selectedTime,
+                    builder: (BuildContext context, Widget? child) {
+                      return MediaQuery(
+                        data: MediaQuery.of(context)
+                            .copyWith(alwaysUse24HourFormat: true),
+                        child: child!,
+                      );
+                    },
+                    errorInvalidText: "Invalid Time",
+                  );
+                  if (selectedTime != null &&
+                      (selectedTime.hour >= 8 && selectedTime.hour <= 23)) {
+                    // Valid time, proceed with the logic
                     setState(() {
                       _selectedTime = selectedTime;
                     });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            "Please select a time between 8:00 AM and 11:59 PM."),
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
                   }
                 },
-                child: Text("⏰ Select Time: ${_selectedTime.format(context)}")),
+                child: Text("⏰ Select Time: ${_selectedTime.format(context)}"
+                ),
+                ),
             TextField(
               controller: _durationController,
               decoration: InputDecoration(hintText: "Duration (hours)"),
@@ -147,7 +169,6 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
             }
 
             if (duration < 0) {
-              
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content:
@@ -166,8 +187,20 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
               _selectedTime.minute,
             );
 
-            final endTime = startTime.add(Duration(hours: duration));
+            //handleding next week event
+            // if (startTime.isAfter(DateTime.now().add(Duration(days: 7)))) {
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     SnackBar(
+            //       content: Text(
+            //         "Event is scheduled for next week!",
+            //       ),
+            //       backgroundColor: Colors.blue,
+            //     ),
+            //   );
+            // }
 
+            final endTime = startTime.add(Duration(hours: duration));
+            
             final appointment = Appointment(
               startTime: startTime,
               endTime: endTime,
