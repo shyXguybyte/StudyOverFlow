@@ -9,8 +9,8 @@ class AddAppointmentDialog extends StatefulWidget {
 
 class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
   final _titleController = TextEditingController();
-  final _startHourController = TextEditingController();
-  final _startMinuteController = TextEditingController();
+  TimeOfDay _selectedTime =
+      TimeOfDay(hour: 8, minute: 0); // New: TimeOfDay for start time
   final _durationController = TextEditingController();
   DateTime _selectedDay = DateTime(2024, 12, 8);
   Color _selectedColor = electricBlue;
@@ -46,16 +46,18 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
               ),
               iconAlignment: IconAlignment.end,
             ),
-            TextField(
-              controller: _startHourController,
-              decoration: InputDecoration(hintText: "Start Hour (8-23)"),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _startMinuteController,
-              decoration: InputDecoration(hintText: "Start Minute (0-59)"),
-              keyboardType: TextInputType.number,
-            ),
+            //Time Picker
+            TextButton(
+                onPressed: () async {
+                  final selectedTime = await showTimePicker(
+                      context: context, initialTime: _selectedTime);
+                  if (selectedTime != null) {
+                    setState(() {
+                      _selectedTime = selectedTime;
+                    });
+                  }
+                },
+                child: Text("⏰ Select Time: ${_selectedTime.format(context)}")),
             TextField(
               controller: _durationController,
               decoration: InputDecoration(hintText: "Duration (hours)"),
@@ -132,8 +134,6 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
         ElevatedButton(
           onPressed: () {
             final title = _titleController.text;
-            final startHour = int.tryParse(_startHourController.text);
-            final startMinute = int.tryParse(_startMinuteController.text) ?? 0;
             final duration = int.tryParse(_durationController.text) ?? 1;
 
             if (title.isEmpty) {
@@ -146,30 +146,8 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
               return;
             }
 
-            if (startHour == null || startHour < 8 || startHour > 23) {
-              // Show error if the start hour is invalid
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Please enter a valid start hour (8 - 23)!"),
-                  backgroundColor: Colors.red,
-                ),
-              );
-              return;
-            }
-
-            if (startMinute < 0 || startMinute > 59) {
-              // Show error if the start minute is invalid
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Please enter a valid start minute (0-59)!"),
-                  backgroundColor: Colors.red,
-                ),
-              );
-              return;
-            }
-
             if (duration < 0) {
-              // Show error if the duration is invalid (should be greater than 0)
+              
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content:
@@ -184,9 +162,10 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
               _selectedDay.year,
               _selectedDay.month,
               _selectedDay.day,
-              startHour,
-              startMinute,
+              _selectedTime.hour,
+              _selectedTime.minute,
             );
+
             final endTime = startTime.add(Duration(hours: duration));
 
             final appointment = Appointment(
