@@ -14,7 +14,6 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
   final _durationController = TextEditingController();
   DateTime _selectedDay = DateTime.now();
   Color _selectedColor = electricBlue;
-  //NEW:
   final _descriptionController = TextEditingController();
 
 
