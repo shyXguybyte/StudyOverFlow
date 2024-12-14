@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kanban_board/custom/board.dart';
 import 'package:kanban_board/models/inputs.dart';
+import 'main.dart';
 import 'list_item.dart';
 
 class Kanban extends StatefulWidget {
@@ -11,6 +12,24 @@ class Kanban extends StatefulWidget {
 }
 
 class _Kanban extends State<Kanban> {
+  Widget task(String description) {
+    return Text(description, style: const TextStyle(color: Colors.amber, fontSize: 16),);
+  }
+  List<BoardListsData> boards = [];
+  BoardListsData todo = BoardListsData(items: []);
+  List<Widget> tasks = [];
+
+  @override
+  initState() {
+    super.initState();
+    Widget firstTask = task("This is my first task");
+    tasks.add(firstTask);
+    todo = BoardListsData(
+        title: "ToDo",
+        items: tasks);
+    boards.add(todo);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,34 +58,7 @@ class _Kanban extends State<Kanban> {
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                List.generate(
-                  3,
-                  (index) => BoardListsData(
-                    title: "ToDo",
-                    backgroundColor: Colors.black,
-                    header: const Row(
-                      children: [
-                        Text('data'),
-                      ],
-                    ),
-                    items: List.generate(
-                      5,
-                      (index) => Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            "Lorem ipsum dolor sit amet, sunt in culpa qui officia deserunt mollit anim id est laborum. $index",
-                            style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500)),
-                      ),
-                    ),
-                  ),
-                ),
+                boards,
               ),
             ),
           ],

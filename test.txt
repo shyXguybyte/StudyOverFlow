@@ -1,0 +1,25 @@
+BoardListsData(
+                    title: "ToDo",
+                    backgroundColor: Colors.black,
+                    header: const Row(
+                      children: [
+                        Text('data'),
+                      ],
+                    ),
+                    items: List.generate(
+                      5,
+                      (index) => Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                            "Lorem ipsum dolor sit amet, sunt in culpa qui officia deserunt mollit anim id est laborum. $index",
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500)),
+                      ),
+                    ),
+                  )
