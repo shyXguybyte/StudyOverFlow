@@ -10,10 +10,13 @@ class AddAppointmentDialog extends StatefulWidget {
 class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
   final _titleController = TextEditingController();
   TimeOfDay _selectedTime =
-      TimeOfDay(hour: 8, minute: 0); // New: TimeOfDay for start time
+      TimeOfDay(hour: 8, minute: 0);
   final _durationController = TextEditingController();
-  DateTime _selectedDay = DateTime(2024, 12, 8);
+  DateTime _selectedDay = DateTime.now();
   Color _selectedColor = electricBlue;
+  //NEW:
+  final _descriptionController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +30,11 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
               controller: _titleController,
               decoration: InputDecoration(hintText: "Title"),
             ),
+            //NEW:
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(hintText: "Description"),
+            ), 
             TextButton(
               onPressed: () async {
                 final selectedDate = await showDatePicker(
@@ -48,38 +56,37 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
             ),
             //Time Picker
             TextButton(
-                onPressed: () async {
-                  final selectedTime = await showTimePicker(
-                    context: context,
-                    initialTime: _selectedTime,
-                    builder: (BuildContext context, Widget? child) {
-                      return MediaQuery(
-                        data: MediaQuery.of(context)
-                            .copyWith(alwaysUse24HourFormat: true),
-                        child: child!,
-                      );
-                    },
-                    errorInvalidText: "Invalid Time",
-                  );
-                  if (selectedTime != null &&
-                      (selectedTime.hour >= 8 && selectedTime.hour <= 23)) {
-                    // Valid time, proceed with the logic
-                    setState(() {
-                      _selectedTime = selectedTime;
-                    });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            "Please select a time between 8:00 AM and 11:59 PM."),
-                        backgroundColor: Colors.orange,
-                      ),
+              onPressed: () async {
+                final selectedTime = await showTimePicker(
+                  context: context,
+                  initialTime: _selectedTime,
+                  builder: (BuildContext context, Widget? child) {
+                    return MediaQuery(
+                      data: MediaQuery.of(context)
+                          .copyWith(alwaysUse24HourFormat: true),
+                      child: child!,
                     );
-                  }
-                },
-                child: Text("⏰ Select Time: ${_selectedTime.format(context)}"
-                ),
-                ),
+                  },
+                  errorInvalidText: "Invalid Time",
+                );
+                if (selectedTime != null &&
+                    (selectedTime.hour >= 8 && selectedTime.hour <= 23)) {
+                  // Valid time, proceed with the logic
+                  setState(() {
+                    _selectedTime = selectedTime;
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          "Please select a time between 8:00 AM and 11:59 PM."),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                }
+              },
+              child: Text("⏰ Select Time: ${_selectedTime.format(context)}"),
+            ),
             TextField(
               controller: _durationController,
               decoration: InputDecoration(hintText: "Duration (hours)"),
@@ -200,12 +207,13 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
             // }
 
             final endTime = startTime.add(Duration(hours: duration));
-            
+
             final appointment = Appointment(
               startTime: startTime,
               endTime: endTime,
               subject: title,
               color: _selectedColor,
+              notes: _descriptionController.text,
             );
 
             Navigator.pop(context, appointment);
