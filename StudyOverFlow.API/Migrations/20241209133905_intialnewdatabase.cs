@@ -8,7 +8,7 @@ using Pgvector;
 namespace StudyOverFlow.API.Migrations
 {
     /// <inheritdoc />
-    public partial class NewInitail : Migration
+    public partial class intialnewdatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

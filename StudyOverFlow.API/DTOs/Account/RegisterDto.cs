@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StudyOverFlow.API.Const;
+using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StudyOverFlow.API.DTOs.Account
 {
@@ -18,7 +20,9 @@ namespace StudyOverFlow.API.DTOs.Account
         [RegularExpression("^((?!\\.)[\\w-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$", ErrorMessage = "Invalid email address !")]
         public string Email { get; set; }
         [Required]
-        [StringLength(15, MinimumLength = 6, ErrorMessage = "Password Name must be at least {2} and maximum {1} characters")]
+        [DataType(DataType.Password),
+            RegularExpression(RegaxStatic.password, ErrorMessage = "that passwords contain an uppercase character, lowercase character, a digit, and a non-alphanumeric character. Passwords must be at least eight characters long.")]
+       // [StringLength(15, MinimumLength = 6, ErrorMessage = "Password Name must be at least {2} and maximum {1} characters")]
         public string Password { get; set; }
         public string? Phone {  get; set; }  
 

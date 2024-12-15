@@ -1,0 +1,154 @@
+﻿@page "/register"
+@using StudyOverFlow.Client.Models
+
+@inject IAccountManagement AccountManagement
+@inject NavigationManager Navigation
+@inject IJSRuntime Js
+<div class="col-12 col-md-5 col-lg-4">
+    <div class="card card-shadow border-0 rounded-3">
+        <div class="card-body p-4">
+            <div class="row g-6">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3 class="fw-bold fs-5 mb-2">Register</h3>
+                        <p class="text-muted">Create a new account</p>
+                    </div>
+                </div>
+            </div>
+            <EditForm Model="Model" OnValidSubmit="Submit">
+                <DataAnnotationsValidator />
+
+                <div class="row">
+
+                    <div class="col-6 form-floating mb-4">
+                        <InputText @bind-Value="Model!.UserName"
+                                   type="text"
+                                   class="form-control rounded-2 border-0 bg-gray"
+                                   id="UserName"
+                                   placeholder="" />
+                        <label for="userName">UserName</label>
+                        <ValidationMessage For="() => Model.UserName" />
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-6 form-floating mb-4">
+                        <InputText @bind-Value="Model!.FirstName"
+                                   type="text"
+                                   class="form-control rounded-2 border-0 bg-gray"
+                                   id="FirstName"
+                                   placeholder="" />
+                        <label for="firstName">FirstName</label>
+                        <ValidationMessage For="() => Model.FirstName" />
+                    </div>
+
+
+
+
+                    <div class="col-6  form-floating mb-4">
+                        <InputText @bind-Value="Model!.LastName"
+                                   type="text"
+                                   class="form-control rounded-2 border-0 bg-gray"
+                                   id="LastName"
+                                   placeholder="" />
+                        <label for="lastName">LastName</label>
+                        <ValidationMessage For="() => Model.LastName" />
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="form-floating mb-4">
+                    <InputText @bind-Value="Model!.Email"
+                               type="email"
+                               class="form-control rounded-2 border-0 bg-gray"
+                               id="email"
+                               placeholder="" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="() => Model.Email" />
+                </div>
+                <div class="form-floating mb-4">
+                    <InputText @bind-Value="Model!.Password"
+                               type="password"
+                               class="form-control rounded-2 border-0 bg-gray"
+                               id="password"
+                               placeholder="" />
+                    <label for="password">Password</label>
+                    <ValidationMessage For="() => Model.Password" />
+                </div>
+                @*  <div class="form-floating mb-4">
+                <InputText @bind-Value="Model!.ConfirmPassword"
+                type="password"
+                class="form-control rounded-2 border-0 bg-gray"
+                id="confirmPassword"
+                placeholder="" />
+                <label for="confirmPassword">Confirm Password</label>
+                <ValidationMessage For="() => Model.ConfirmPassword" />
+                </div> *@
+                <div class="col-12 @(errorList.Any() ? string.Empty : "d-none")">
+                    <div class="alert alert-danger">
+                        @foreach (var error in errorList)
+                        {
+                            <span>@error</span>
+                        }
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg fs-6 fw-bolder py-3 w-100" disabled="@loading">Sign up</button>
+            </EditForm>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <p class="text-muted">
+            You have an account?
+            <NavLink href="/login" class="text-none">Sign in</NavLink>
+        </p>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private RegisterDto? Model { get; set; }
+
+    private string[] errorList = [];
+    private bool loading = false;
+
+    protected override void OnInitialized() => Model ??= new();
+
+    private async Task Submit()
+    {
+        loading = true;
+
+        var result = await AccountManagement.RegisterAsync(new RegisterDto
+            {
+                Email = Model!.Email,
+                Password = Model!.Password,
+                FirstName = Model.FirstName,
+                LastName = Model.LastName,
+                UserName = Model.UserName
+            });
+
+        if (result.Succeeded)
+        {
+            /*
+             *Swal.fire({
+      title: "Good job!",
+      text: "You clicked the button!",
+      icon: "success"
+    });
+             */
+            await Js.InvokeVoidAsync("Swal.fire", new { title = "register completed", 
+                                                text = "a confirmation Email will be send to you" ,
+                                                Icon ="success"});
+            Navigation.NavigateTo("/login");
+        }
+        else
+        {
+            errorList = result.ErrorList;
+        }
+
+        loading = false;
+    }
+}

@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using StudyOverFlow.API.Data;
+using StudyOverFlow.API.MiddleWare;
 using StudyOverFlow.API.Model;
 using StudyOverFlow.API.Profile;
 using StudyOverFlow.API.Services;
+using StudyOverFlow.API.settings;
 using System.Reflection;
 using System.Text;
 
@@ -21,8 +23,14 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IEmailBodyBuilder, EmailBodyBuilder>();
 builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = true;
+}).AddEntityFrameworkStores<ApplicationDbContext>()
+  .AddDefaultTokenProviders();
+//builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsFactory>();
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -50,6 +58,14 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!))
     };
 });
+builder.Services.AddCors(option => option.AddDefaultPolicy(
+                     builder =>builder
+                         .AllowAnyMethod()
+                         .AllowAnyHeader()
+                         .WithOrigins("https://localhost:7241")
+                         .AllowCredentials()
+                     
+                     ));
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
@@ -59,10 +75,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
+app.UseCors();
+app.UseRouting();
+
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

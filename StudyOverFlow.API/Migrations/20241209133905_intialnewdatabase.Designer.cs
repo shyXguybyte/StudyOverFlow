@@ -13,8 +13,8 @@ using StudyOverFlow.API.Data;
 namespace StudyOverFlow.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241206220229_NewInitail")]
-    partial class NewInitail
+    [Migration("20241209133905_intialnewdatabase")]
+    partial class intialnewdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
