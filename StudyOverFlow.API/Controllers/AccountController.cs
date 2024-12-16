@@ -23,6 +23,7 @@ namespace StudyOverFlow.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class AccountController : ControllerBase
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
