@@ -40,5 +40,7 @@ class CalendarSettings {
       dateFormat: 'd',
       dayFormat: 'E',
     ),
+    "maxLine": 5,
+    "minLine": 3
   };
 }
