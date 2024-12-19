@@ -15,6 +15,28 @@ namespace StudyOverFlow.API.Controllers
         {
             _dbcontext = dbcontext;
         }
+
+        [HttpGet("Get")]
+        public ActionResult<IEnumerable<Note>> GetAllNotes(string mk)
+        {
+            var notes = _dbcontext.Notes.ToList()
+                .Select(c=>new  NoteDto{ text = c.text ,DateTime= c.DateTime}).ToList(); 
+            if(mk is null || mk.Length < 2)
+            {
+                return BadRequest();
+            }
+
+            return Ok(notes);  
+        }
+        [HttpPost("Set")]
+        public ActionResult<IEnumerable<Note>> CreateNote(string mk)
+        {
+            var note = _dbcontext.Notes.Add(new Note { text = mk, DateTime = DateTime.Now });
+            _dbcontext.SaveChanges();   
+            return Ok(note);
+        }
+        
+        
         //[HttpPost()]
 
         //public ActionResult<IEnumerable<Note>> AddNoteToDate(int tagId)
@@ -23,7 +45,7 @@ namespace StudyOverFlow.API.Controllers
         //    _dbcontext.SaveChanges();   
         //}
 
-            [HttpGet("Notes")]
+        /*[HttpGet("Notes")]
         public ActionResult<IEnumerable<Note>> GetAllNotes(string mk)
         {
             var notes = _dbcontext.Notes.ToList()
@@ -39,7 +61,7 @@ namespace StudyOverFlow.API.Controllers
  
                 
         
-        }
+        }*/
         //public IActionResult Index()
         //{
         //    return View();
