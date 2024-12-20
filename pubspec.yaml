@@ -37,6 +37,12 @@ dependencies:
   cupertino_icons: ^1.0.8
   rive: ^0.13.20
   flutter_svg: ^2.0.10
+  fluttertoast: ^8.2.10
+  http: ^1.2.2
+  shared_preferences: ^2.3.3
+  provider: ^6.1.2
+  dartz: ^0.10.1
+  either_dart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -62,10 +68,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/avaters/
     - assets/Backgrounds/
     - assets/icons/
     - assets/RiveAssets/
+    - assets/images/
+    - assets/images/photo_2024-12-20_18-20-31.jpg
+    - assets/images/photo_2024-12-20_18-20-37.jpg
+    - assets/images/photo_2024-12-20_18-20-45.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -88,6 +97,10 @@ flutter:
       fonts:
         - asset: assets/Fonts/Poppins-Bold.ttf
           weight: 700
+    - family: Mulish
+      fonts:
+        - asset: assets/Fonts/Mulish-SemiBold.ttf
+        - asset: assets/Fonts/Mulish-Light.ttf 
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

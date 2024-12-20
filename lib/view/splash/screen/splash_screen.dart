@@ -2,11 +2,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart' hide Image;
 import 'package:study_over_flow/core/const/app_text.dart';
-import 'package:study_over_flow/view/auth/screen/login_screen.dart';
-
 import '../../../core/const/app_image.dart';
 import '../../../core/styles/app_styles.dart';
+import '../../../core/utils/helper_class/shared_pref_hellper.dart';
+import '../../../core/utils/helper_class/size_config.dart';
+import '../../auth/screen/login_screen.dart';
+import '../../onBoarding/screen/onboarding_screen.dart';
 import '../widget/animated_btn.dart';
+
 
 
 class SplashScreen extends StatefulWidget {
@@ -34,8 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.sizeOf(context).width;
-    double height = MediaQuery.sizeOf(context).height;
+    SizeConfig().init(context); 
+    double width = SizeConfig.screenW!;
+    double height = SizeConfig.screenH!;
     return Scaffold(
       body: Stack(
         children: [
@@ -91,8 +95,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     AnimatedBtn(
                       btnAnimationController: _btnAnimationController,
                       press: () {
+                        print("pressed");
+                        print(SharedPreferencesHelper.getBool(key: "onBoarding"));
                         _btnAnimationController.isActive = true;
-
                         Future.delayed(
                           const Duration(milliseconds: 800),
                           () {
@@ -100,11 +105,12 @@ class _SplashScreenState extends State<SplashScreen> {
                               isShowSignInDialog = true;
                             });
                             if (!context.mounted) return;
-                            showCustomDialogLogin(
-                              context,
-                              onValue: (_) {},
-                            );
-                           },
+                            if (SharedPreferencesHelper.getBool(key: "onBoarding")??false){
+                              Navigator.pushReplacementNamed(context,LogInScreen.routeName);
+                            }else{
+                              Navigator.pushReplacementNamed(context,OnboardingScreen.routeName);
+                            }
+                            },
                         );
                       },
                     ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../widget/input_border.dart';
 import 'app_color.dart';
 
 
 ThemeData lightThemeData() => ThemeData(
       scaffoldBackgroundColor: scaffoldBackgroundColor,
+      primaryColor: Colors.amber,
       primarySwatch: primarySwatchColor,
       fontFamily: "Intel",
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -19,13 +19,5 @@ ThemeData lightThemeData() => ThemeData(
           statusBarIconBrightness: Brightness.dark,
         ),
       ),
-      inputDecorationTheme: const InputDecorationTheme(
-        filled: true,
-        fillColor: Colors.white,
-        errorStyle: TextStyle(height: 0),
-        border: defaultInputBorder,
-        enabledBorder: defaultInputBorder,
-        focusedBorder: defaultInputBorder,
-        errorBorder: defaultInputBorder,
-      ),
+
     );

@@ -3,10 +3,13 @@ import 'package:study_over_flow/view/splash/screen/splash_screen.dart';
 
 import 'core/const/app_text.dart';
 import 'core/const/app_themes.dart';
+import 'core/utils/helper_class/shared_pref_hellper.dart';
 import 'core/utils/helper_functions/on_generate_routes.dart';
 
 // this is the main function of the app
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferencesHelper.init();
   runApp(const MyApp());
 }
 
