@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:study_over_flow/core/widget/customer_or_widget.dart';
 import 'package:study_over_flow/model/remote/sigin_model.dart';
 import 'package:study_over_flow/view/auth/screen/login_screen.dart';
 
@@ -10,7 +9,8 @@ import '../../../core/utils/helper_functions/handel_request.dart';
 import '../../../core/widget/customer_button.dart';
 import '../../../core/widget/customer_toast.dart';
 import '../../../core/widget/text_form.dart';
-import 'confirm_screen.dart';
+import '../../../model/local/auth/register_model.dart';
+import '../widget/login_bot_nav.dart';
 
 class SigInScreen extends StatefulWidget {
   const SigInScreen({super.key});
@@ -62,6 +62,14 @@ class _SigInScreenState extends State<SigInScreen> {
         !_phone.currentState!.validate()) {
       return;
     }
+    RegisterModel registerModel = RegisterModel(
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastnameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+      userName: _usernameController.text.trim(),
+      phone: _phoneController.text.trim(),
+    );
 
     setState(() {
       _isLoading = true;
@@ -70,27 +78,28 @@ class _SigInScreenState extends State<SigInScreen> {
 
     try {
       final result = await sigInData.sigIn(
-        firstName: _firstNameController.text.trim(),
-        lastName: _lastnameController.text.trim(),
-        userName: _usernameController.text.trim(),
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-        phone: _phoneController.text.trim(),
+        firstName: registerModel.firstName,
+        lastName: registerModel.lastName,
+        userName: registerModel.userName,
+        email: registerModel.email,
+        password: registerModel.password,
+        phone: registerModel.phone,
       );
 
       final state = handleRequest(result);
-      print(state);
       if (state == RequestState.loaded) {
         // Success logic
         customerFlutterToast("Sign in successful", Colors.green);
-        if(mounted){
-          Navigator.pushReplacementNamed(context,LogInScreen.routeName);
+        if (mounted) {
+          Navigator.pushReplacementNamed(
+              context, LogInScreen.routeName);
         }
       } else if (state == RequestState.internetFailure) {
         customerFlutterToast("No internet connection", Colors.red);
       } else if (state == RequestState.emailAlreadyExist) {
         customerFlutterToast(
-            "Email or User name are used. Please try again", Colors.red);
+            "Email or User name are used. Please try again",
+            Colors.red);
       } else {
         customerFlutterToast("Sign in failed: $state", Colors.red);
       }
@@ -109,6 +118,14 @@ class _SigInScreenState extends State<SigInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: LoginBottNaveBare(
+        title: "Already have an account?",
+        subTitle: "Login",
+        onPressed: () {
+          Navigator.pushReplacementNamed(
+              context, LogInScreen.routeName);
+        },
+      ),
       backgroundColor: Colors.grey[50],
       body: SafeArea(
         child: SingleChildScrollView(
@@ -117,34 +134,45 @@ class _SigInScreenState extends State<SigInScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 15),
-              Center(
-                child: Image.asset(
-                  "assets/images/image1.png",
-                  height: 180,
-                ),
-              ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 30),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  "Sign In",
+                  "Create an Account",
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: "Poppins",
+                    color: Colors.amber,
                     fontWeight: FontWeight.bold,
-                    fontSize: 35,
+                    fontSize: 30,
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Text(
+                  "Please enter your details ",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    wordSpacing: .2,
+                    color: Colors.grey[600],
+                    fontFamily: "intel",
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
               CustomerTextForm(
                 controller: _firstNameController,
                 message: 'Name Can\'t Be Empty',
                 formKey: _firstName,
                 icon: Icon(Icons.person),
                 hintText: 'First Name:',
-                onFieldSubmitted: (value) {},
+                onFieldSubmitted: (value) {
+                  _signIn();
+                },
+                onEditingComplete: _signIn,
               ),
               const SizedBox(height: 20),
               CustomerTextForm(
@@ -153,21 +181,26 @@ class _SigInScreenState extends State<SigInScreen> {
                 formKey: _lastname,
                 icon: Icon(Icons.person),
                 hintText: 'Last Name:',
-                onFieldSubmitted: (value) {},
+                onFieldSubmitted: (value) {
+                  _signIn();
+                },
+                onEditingComplete: _signIn,
               ),
               const SizedBox(height: 20),
               CustomerTextForm(
                 controller: _usernameController,
                 message: 'User Name Can\'t Be Empty',
                 formKey: _username,
-                icon: Icon(Icons.person),
+                icon: Icon(Icons.supervised_user_circle_rounded),
                 hintText: 'User Name:',
                 onFieldSubmitted: (value) {
                   _signIn();
                 },
+                onEditingComplete: _signIn,
               ),
               const SizedBox(height: 20),
               CustomerTextForm(
+                isEmail: true,
                 controller: _emailController,
                 message: 'Email Can\'t Be Empty',
                 formKey: _email,
@@ -176,6 +209,7 @@ class _SigInScreenState extends State<SigInScreen> {
                 onFieldSubmitted: (value) {
                   _signIn();
                 },
+                onEditingComplete: _signIn,
               ),
               const SizedBox(height: 20),
               CustomerTextForm(
@@ -184,7 +218,9 @@ class _SigInScreenState extends State<SigInScreen> {
                 formKey: _password,
                 icon: InkWell(
                   onTap: _togglePasswordVisibility,
-                  child: _isObscure ? Icon(Icons.lock):Icon(Icons.lock_open),
+                  child: _isObscure
+                      ? Icon(Icons.lock)
+                      : Icon(Icons.lock_open),
                 ),
                 hintText: 'Password:',
                 obscureText: _isObscure,
@@ -212,6 +248,7 @@ class _SigInScreenState extends State<SigInScreen> {
                       title: 'Sign In',
                       onPressed: _signIn,
                     ),
+              CustomerOrWidget(),
             ],
           ),
         ),

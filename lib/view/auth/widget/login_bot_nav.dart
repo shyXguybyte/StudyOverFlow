@@ -24,6 +24,7 @@ class LoginBottNaveBare extends StatelessWidget {
             title,
             style: TextStyle(
                 fontFamily: "intel",
+                color: Colors.grey[600],
                 fontSize: 16,
                 fontWeight: FontWeight.w500),
           ),
@@ -32,12 +33,12 @@ class LoginBottNaveBare extends StatelessWidget {
             child: Text(
               subTitle,
               style: TextStyle(
-                  color: Colors.amber,
-                  fontFamily: "intel",
-                  decoration: TextDecoration.underline,
-                  decorationColor: Colors.black26,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700),
+                decoration: TextDecoration.underline,
+                fontFamily: "intel",
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: Colors.amber,
+              ),
             ),
           )
         ],

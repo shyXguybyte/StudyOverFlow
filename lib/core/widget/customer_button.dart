@@ -24,9 +24,11 @@ class CustomerButton extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Text(title,
                     style: TextStyle(
+                      wordSpacing: 1,
+                      color: Colors.grey[800],
                       fontFamily: "intel",
                       fontWeight: FontWeight.w700,
-                      fontSize: 18,
+                      fontSize: 17,
                     )),
               ))),
         ));

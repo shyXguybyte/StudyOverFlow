@@ -10,8 +10,9 @@ class CustomerTextForm extends StatelessWidget {
     required this.hintText,
     this.onEditingComplete,
     this.obscureText = false,
-    this.onFieldSubmitted, 
+    this.onFieldSubmitted,
     this.textInputType = TextInputType.text,
+    this.isEmail = false,
   });
 
   final TextEditingController controller;
@@ -26,7 +27,8 @@ class CustomerTextForm extends StatelessWidget {
   final Function(String)? onFieldSubmitted;
 
   final bool obscureText;
-  final TextInputType textInputType ;
+  final TextInputType textInputType;
+  final bool isEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +59,21 @@ class CustomerTextForm extends StatelessWidget {
             focusedBorder: buildBorder(),
           ),
           validator: (String? value) {
-            if (value == null || value.isEmpty || value.length < 5) {
+            if (value == null || value.isEmpty) {
               return message;
-            } else {
-              return null;
             }
+            if (isEmail) {
+              final emailRegex = RegExp(
+                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+              );
+              if (!emailRegex.hasMatch(value)) {
+                return 'Please enter a valid email address';
+              }
+            }
+            if (value.length < 5) {
+              return 'Must be at least 5 characters long';
+            }
+            return null;
           },
           onEditingComplete: onEditingComplete,
           onFieldSubmitted: (value) {

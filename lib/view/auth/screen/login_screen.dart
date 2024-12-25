@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:study_over_flow/view/auth/screen/sig_in_screen.dart';
 import '../../../core/class/curd.dart';
@@ -9,9 +7,11 @@ import '../../../core/widget/customer_button.dart';
 import '../../../core/widget/customer_or_widget.dart';
 import '../../../core/widget/customer_toast.dart';
 import '../../../core/widget/text_form.dart';
+import '../../../model/local/auth/login_model.dart';
 import '../../../model/remote/login_,model.dart';
 import '../widget/login_bot_nav.dart';
 import 'forget_password.dart';
+
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -45,46 +45,55 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   Future<void> _logIn() async {
-    if (!_emailFormKey.currentState!.validate() ||
-        !_passwordFormKey.currentState!.validate()) {
-      return;
-    }
+    if (!_isLoading) {
+      {
+        if (!_emailFormKey.currentState!.validate() ||
+            !_passwordFormKey.currentState!.validate()) {
+          return;
+        }
+        
+        final LoginModel loginModel = LoginModel(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
 
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+        setState(() {
+          _isLoading = true;
+          _errorMessage = null;
+        });
 
-    try {
-      final result = await loginData.login(
-        userName: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+        try {
+          final result = await loginData.login(
+            userName: loginModel.email,
+            password:loginModel.password,
+          );
 
-      final state = handleRequest(result);
-      if (state == RequestState.loaded) {
-        // Success logic
-        customerFlutterToast("Login successful", Colors.green);
-
-        Navigator.pushReplacementNamed(
-            context, "/dashboard"); // Example
-      } else if (state == RequestState.internetFailure) {
-        customerFlutterToast("No internet connection", Colors.red);
-      } else if (state == RequestState.unauthorised) {
-        customerFlutterToast(
-            "Invalid User Name or Password", Colors.red);
-      } else {
-        customerFlutterToast("Login failed: $state", Colors.red);
+          final state = handleRequest(result);
+          if (state == RequestState.loaded) {
+            customerFlutterToast("Login successful", Colors.green);
+            // Navigate to Home Screen or Dashboard Screen page
+            if(mounted){
+              Navigator.pushReplacementNamed(context, "/dashboard");
+            } 
+            // Example
+          } else if (state == RequestState.internetFailure) {
+            customerFlutterToast("No internet connection", Colors.red);
+          } else if (state == RequestState.unauthorised) {
+            customerFlutterToast("Invalid User Name or Password", Colors.red);
+          } else {
+            customerFlutterToast("Login failed: $state", Colors.red);
+          }
+        } catch (e) {
+          setState(() {
+            _errorMessage =
+                "An error occurred. Please try again later.";
+          });
+          customerFlutterToast(_errorMessage!, Colors.red);
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
-    } catch (e) {
-      setState(() {
-        _errorMessage = "An error occurred. Please try again later.";
-      });
-      customerFlutterToast(_errorMessage!, Colors.red);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -127,6 +136,7 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
               const SizedBox(height: 30),
               CustomerTextForm(
+                isEmail: true,
                 textInputType: TextInputType.emailAddress,
                 controller: _emailController,
                 message: 'Email can\'t be empty',
@@ -162,10 +172,11 @@ class _LogInScreenState extends State<LogInScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    const Text(
+                     Text(
                       "Forget Password? ",
                       style: TextStyle(
                         fontFamily: "intel",
+                        color: Colors.grey[600],
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),

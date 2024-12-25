@@ -19,7 +19,7 @@ class CustomerOrWidget extends StatelessWidget {
             child: Text(
               "OR",
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 14,
                 color: Colors.black45,
                 fontWeight: FontWeight.w600,
               ),
