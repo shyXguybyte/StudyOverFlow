@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:home_function/constants/Colors.dart';
+
+import '../../../core/const/app_color.dart';
 
 class Subjects extends StatefulWidget {
   const Subjects({super.key});

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:study_over_flow/core/utils/helper_class/shared_pref_hellper.dart';
 import 'package:study_over_flow/view/auth/screen/sig_in_screen.dart';
 import '../../../core/class/curd.dart';
 import '../../../core/class/request_state.dart';
+import '../../../core/const/app_color.dart';
 import '../../../core/utils/helper_functions/handel_request.dart';
 import '../../../core/widget/customer_button.dart';
 import '../../../core/widget/customer_or_widget.dart';
@@ -9,9 +11,10 @@ import '../../../core/widget/customer_toast.dart';
 import '../../../core/widget/text_form.dart';
 import '../../../model/local/auth/login_model.dart';
 import '../../../model/remote/login_,model.dart';
+import '../../home/widget/navBar.dart';
 import '../widget/login_bot_nav.dart';
+import 'confirm_screen.dart';
 import 'forget_password.dart';
-
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -45,13 +48,14 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   Future<void> _logIn() async {
+    
     if (!_isLoading) {
       {
         if (!_emailFormKey.currentState!.validate() ||
             !_passwordFormKey.currentState!.validate()) {
           return;
         }
-        
+
         final LoginModel loginModel = LoginModel(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
@@ -64,30 +68,40 @@ class _LogInScreenState extends State<LogInScreen> {
         try {
           final result = await loginData.login(
             userName: loginModel.email,
-            password:loginModel.password,
+            password: loginModel.password,
           );
-
+          SharedPreferencesHelper.setString(key: "token", value: result["jwt"]);
+          SharedPreferencesHelper.setString(key: "email", value: result["email"]);
           final state = handleRequest(result);
           if (state == RequestState.loaded) {
-            customerFlutterToast("Login successful", Colors.green);
+            customerFlutterToast("Login successful", green);
             // Navigate to Home Screen or Dashboard Screen page
-            if(mounted){
-              Navigator.pushReplacementNamed(context, "/dashboard");
-            } 
+            if (mounted) {
+              Navigator.pushReplacementNamed(context, NavBar.routeName);
+            }
             // Example
+          } else if (state == RequestState.userNotConfirm) {
+            // navigator to confirm email page
+            customerFlutterToast(
+                "User not confirmed. Please confirm your email", primaryColor);
+            if(mounted){
+              Navigator.pushReplacementNamed(context, ConfirmEmailScreen.routeName);
+            }
           } else if (state == RequestState.internetFailure) {
-            customerFlutterToast("No internet connection", Colors.red);
+            customerFlutterToast(
+                "No internet connection", red);
           } else if (state == RequestState.unauthorised) {
-            customerFlutterToast("Invalid User Name or Password", Colors.red);
+            customerFlutterToast(
+                "Invalid User Name or Password", red);
           } else {
-            customerFlutterToast("Login failed: $state", Colors.red);
+            customerFlutterToast("Login failed: $state", red);
           }
         } catch (e) {
           setState(() {
             _errorMessage =
                 "An error occurred. Please try again later.";
           });
-          customerFlutterToast(_errorMessage!, Colors.red);
+          customerFlutterToast(_errorMessage!, red);
         } finally {
           setState(() {
             _isLoading = false;
@@ -100,7 +114,7 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: backgroundColorLight,
       bottomNavigationBar: LoginBottNaveBare(
         title: "Don't Have Account?",
         subTitle: "Sign In",
@@ -172,11 +186,11 @@ class _LogInScreenState extends State<LogInScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                     Text(
+                    Text(
                       "Forget Password? ",
                       style: TextStyle(
                         fontFamily: "intel",
-                        color: Colors.grey[600],
+                        color: grey600,
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
@@ -193,7 +207,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           fontFamily: "intel",
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
-                          color: Colors.amber,
+                          color: primaryColor,
                         ),
                       ),
                     ),
@@ -205,7 +219,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   child: Padding(
                     padding: EdgeInsets.all(12.0),
                     child: CircularProgressIndicator(
-                        color: Colors.amber),
+                        color: primaryColor),
                   ),
                 )
               else

@@ -21,7 +21,10 @@ class Curd {
     }else if(response.statusCode == 401){
       if(response.body == "Invalid Usern Name or Password !"){
         return const Left(RequestState.emailAlreadyExist);
-      }else {
+      }else if(response.body == "Please confirm your email !"){
+        return const Left(RequestState.userNotConfirm);
+      }
+      else {
         return const Left(RequestState.unauthorised);
       }
     } else {
@@ -49,12 +52,15 @@ class Curd {
   }
 
   // GET method
-  Future<Either<RequestState, Map<String, dynamic>>> get(String url) async {
+  Future<Either<RequestState, Map<String, dynamic>>> get(String url,[String? token]) async {
     try {
       if (await interConnect()) {
         final response = await http.get(
           Uri.parse(url),
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            if (token != null) 'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json'
+          },
         );
         return _handleResponse(response); 
       } else {

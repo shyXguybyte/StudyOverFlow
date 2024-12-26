@@ -8,4 +8,5 @@ enum RequestState {
   error,
   unauthorised,
   emailAlreadyExist,
+  userNotConfirm,
 }

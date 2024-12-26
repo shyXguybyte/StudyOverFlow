@@ -4,6 +4,7 @@ import '../../../view/auth/screen/forget_password.dart';
 import '../../../view/auth/screen/login_screen.dart';
 import '../../../view/auth/screen/rest_password_screen.dart';
 import '../../../view/auth/screen/sig_in_screen.dart';
+import '../../../view/home/widget/navBar.dart';
 import '../../../view/onBoarding/screen/onboarding_screen.dart';
 import '../../../view/splash/screen/splash_screen.dart';
 
@@ -31,7 +32,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           builder: (context) => const ForgetPasswordScreen());  
     case OnboardingScreen.routeName:
       return MaterialPageRoute(
-          builder: (context) => const OnboardingScreen());  
+          builder: (context) => const OnboardingScreen());
+    case NavBar.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const NavBar());
     default:
       return MaterialPageRoute(
           builder: (context) => const Scaffold());

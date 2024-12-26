@@ -5,6 +5,7 @@ import 'package:study_over_flow/view/auth/screen/login_screen.dart';
 
 import '../../../core/class/curd.dart';
 import '../../../core/class/request_state.dart';
+import '../../../core/const/app_color.dart';
 import '../../../core/utils/helper_functions/handel_request.dart';
 import '../../../core/widget/customer_button.dart';
 import '../../../core/widget/customer_toast.dart';
@@ -89,25 +90,25 @@ class _SigInScreenState extends State<SigInScreen> {
       final state = handleRequest(result);
       if (state == RequestState.loaded) {
         // Success logic
-        customerFlutterToast("Sign in successful", Colors.green);
+        customerFlutterToast("Sign in successful", green);
         if (mounted) {
           Navigator.pushReplacementNamed(
               context, LogInScreen.routeName);
         }
       } else if (state == RequestState.internetFailure) {
-        customerFlutterToast("No internet connection", Colors.red);
+        customerFlutterToast("No internet connection", red);
       } else if (state == RequestState.emailAlreadyExist) {
         customerFlutterToast(
             "Email or User name are used. Please try again",
-            Colors.red);
+            red);
       } else {
-        customerFlutterToast("Sign in failed: $state", Colors.red);
+        customerFlutterToast("Sign in failed: $state", red);
       }
     } catch (e) {
       setState(() {
         _errorMessage = "An error occurred. Please try again later.";
       });
-      customerFlutterToast(_errorMessage!, Colors.red);
+      customerFlutterToast(_errorMessage!, red);
     } finally {
       setState(() {
         _isLoading = false;
@@ -126,7 +127,7 @@ class _SigInScreenState extends State<SigInScreen> {
               context, LogInScreen.routeName);
         },
       ),
-      backgroundColor: Colors.grey[50],
+      backgroundColor: backgroundColorLight,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

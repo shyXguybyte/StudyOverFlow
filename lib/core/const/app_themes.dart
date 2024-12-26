@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app_color.dart';
+import 'app_text.dart';
 
 
 ThemeData lightThemeData() => ThemeData(
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      primaryColor: Colors.amber,
+      primaryColor:primaryColor,
+      primaryColorDark: primaryColor,
+      primaryColorLight: primaryColor,
       primarySwatch: primarySwatchColor,
-      fontFamily: "Intel",
+      fontFamily: intel,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
             foregroundColor: elevatedButtonColor),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:study_over_flow/core/utils/helper_class/size_config.dart';
 
+import '../../../core/const/app_color.dart';
+
 class OnBoardingWidget extends StatelessWidget {
   const OnBoardingWidget(
       {super.key,
@@ -35,7 +37,7 @@ class OnBoardingWidget extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.amber.shade600,
+              color: primaryColorShade600,
               fontFamily: "Mulish",
               fontWeight: FontWeight.w600,
               fontSize: (width <= 550) ? 30 : 35,
@@ -48,7 +50,7 @@ class OnBoardingWidget extends StatelessWidget {
               fontFamily: "Mulish",
               fontWeight: FontWeight.w300,
               fontSize: (width <= 550) ? 17 : 25,
-              color: Colors.black,
+              color: shadowColorDark,
             ),
             textAlign: TextAlign.center,
           )

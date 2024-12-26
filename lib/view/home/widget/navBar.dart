@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:home_function/View/screens/kanban.dart';
-import 'package:home_function/View/screens/notes.dart';
-import 'package:home_function/View/screens/settings.dart';
-import 'package:home_function/View/screens/subject.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import 'package:home_function/View/screens/calender/calender.dart';
+
+import '../screen/calender.dart';
+import '../screen/kanban.dart';
+import '../screen/notes.dart';
+import '../screen/settings.dart';
+import '../screen/subject.dart';
 
 
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key}) : super(key: key);
+  const NavBar({super.key});
+  static const routeName = "/home_screen";
 
   @override
   Widget build(BuildContext context) {
     // PersistentTabController to manage the active tab
-    final PersistentTabController _controller =
+    final PersistentTabController controller =
         PersistentTabController(initialIndex: 0);
 
 
     // List of navigation items
-    final List<PersistentBottomNavBarItem> _navBarsItems = [
+    final List<PersistentBottomNavBarItem> navBarsItems = [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.calendar_today),
         title: ("Calendar"),
@@ -51,7 +53,7 @@ class NavBar extends StatelessWidget {
       ),
     ];
 
-List<Widget> _buildScreens() {
+List<Widget> buildScreens() {
     return [
        MyHomePage(),
       Notes(),
@@ -63,9 +65,9 @@ List<Widget> _buildScreens() {
     // Build the PersistentTabView
      return PersistentTabView(
       context,
-      controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarsItems,
+      controller: controller,
+      screens: buildScreens(),
+      items: navBarsItems,
       confineToSafeArea: true,
       backgroundColor: Colors.white,
       handleAndroidBackButtonPress: true,

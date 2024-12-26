@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:study_over_flow/core/utils/helper_class/size_config.dart';
+import '../../../core/const/app_color.dart';
 import '../../../core/utils/helper_class/shared_pref_hellper.dart';
 import '../../../core/widget/customer_button.dart';
 import '../../../model/local/on_boarding/onboarding_contents.dart';
@@ -26,12 +27,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   int _currentPage = 0;
   List colors = const [
-    // Color(0xffFFE5DE),
-    // Color(0xff9BF6FF),
-    // Color(0xffCAFFBF),
-    Colors.white,
-    Colors.white,
-    Colors.white,
+    elevatedButtonColor,
+    elevatedButtonColor,
+    elevatedButtonColor,
   ];
 
   AnimatedContainer _buildDots({
@@ -43,7 +41,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           borderRadius: BorderRadius.all(
             Radius.circular(50),
           ),
-          color: Color(0xFF000000),
+          color: shadowColorDark,
         ),
         margin: const EdgeInsets.only(right: 5),
         height: 10,
@@ -124,12 +122,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 child: const Text(
                                   "SKIP",
                                   style:
-                                      TextStyle(color: Colors.black),
+                                      TextStyle(color: shadowColorDark),
                                 ),
                               ),
                               FloatingActionButton(
                                 heroTag: "next",
-                                backgroundColor: Colors.black,
+                                backgroundColor: shadowColorDark,
                                 onPressed: () {
                                   _controller.nextPage(
                                     duration: const Duration(
@@ -139,7 +137,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 },
                                 child: const Icon(
                                   Icons.arrow_forward_ios_sharp,
-                                  color: Colors.white,
+                                  color: backgroundColorLight,
                                 ),
                               )
                             ],

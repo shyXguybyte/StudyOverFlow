@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:study_over_flow/core/const/app_color.dart';
 import 'package:study_over_flow/view/auth/screen/login_screen.dart';
 
 import '../../../core/widget/customer_button.dart';
@@ -53,7 +54,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
         final data = jsonDecode(response.body);
         customerFlutterToast(
             "Reset password link sent to your successful",
-            Colors.amber);
+            primaryColor);
       } else {
         final errorData = jsonDecode(response.body);
         setState(() {
@@ -78,7 +79,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor:backgroundColorLight,
       bottomNavigationBar:  LoginBottNaveBare(
         title: 'Have an account already?',
         subTitle: 'LogIn',
@@ -129,7 +130,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               if (_isLoading)
                 const Center(
                     child: CircularProgressIndicator(
-                  color: Colors.amber,
+                  color: primaryColor,
                 ))
               else
                 CustomerButton(

@@ -2,13 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:study_over_flow/view/auth/screen/login_screen.dart';
 
+import '../../../core/const/app_color.dart';
 import '../../../core/widget/customer_button.dart';
-import '../../../core/widget/customer_or_widget.dart';
 import '../../../core/widget/customer_toast.dart';
 import '../../../core/widget/text_form.dart';
-import '../widget/login_bot_nav.dart';
 
 class RestPasswordScreen extends StatefulWidget {
   const RestPasswordScreen({super.key});
@@ -60,7 +58,7 @@ class _RestPasswordScreenState extends State<RestPasswordScreen> {
         final data = jsonDecode(response.body);
         customerFlutterToast(
             "Reset password link sent to your successful",
-            Colors.amber);
+            green);
       } else {
         final errorData = jsonDecode(response.body);
         setState(() {
@@ -85,7 +83,7 @@ class _RestPasswordScreenState extends State<RestPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: backgroundColorLight,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -140,7 +138,7 @@ class _RestPasswordScreenState extends State<RestPasswordScreen> {
               if (_isLoading)
                 const Center(
                     child: CircularProgressIndicator(
-                  color: Colors.amber,
+                  color: primaryColor,
                 ))
               else
                 CustomerButton(

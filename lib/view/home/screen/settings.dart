@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:home_function/constants/Colors.dart';
+
+import '../../../core/const/app_color.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});

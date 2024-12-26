@@ -1,13 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:study_over_flow/view/auth/screen/login_screen.dart';
-import 'package:study_over_flow/view/auth/screen/rest_password_screen.dart';
+import 'package:study_over_flow/view/auth/screen/sig_in_screen.dart';
 
+import '../../../core/class/curd.dart';
+import '../../../core/class/request_state.dart';
+import '../../../core/const/app_color.dart';
+import '../../../core/utils/helper_functions/handel_request.dart';
 import '../../../core/widget/customer_button.dart';
+import '../../../core/widget/customer_or_widget.dart';
 import '../../../core/widget/customer_toast.dart';
 import '../../../core/widget/text_form.dart';
+import '../../../model/remote/re_confirm_model.dart';
+import '../widget/login_bot_nav.dart';
 
 class ConfirmEmailScreen extends StatefulWidget {
   const ConfirmEmailScreen({super.key});
@@ -21,114 +25,74 @@ class ConfirmEmailScreen extends StatefulWidget {
 
 class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
   final TextEditingController _emailController =
-  TextEditingController();
+      TextEditingController();
 
-  final GlobalKey<FormState> _email = GlobalKey<FormState>();
+  final GlobalKey<FormState> _emailFormKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
   String? _errorMessage;
 
-  Future<void> _resendEmail() async {
-    print("test");
-    Navigator.pushReplacementNamed(context, RestPasswordScreen.routeName);
-    final email = _emailController.text.trim();
-
-    if (!_email.currentState!.validate()) {
-      return;
-    }
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final url = Uri.parse('https://example.com/api/login');
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': email,
-        }),
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        customerFlutterToast(
-            "Reset password link sent to your successful",
-            Colors.amber);
-      } else {
-        final errorData = jsonDecode(response.body);
-        setState(() {
-          _errorMessage =
-              errorData['message'] ?? 'Invalid credentials';
-          customerFlutterToast(_errorMessage!);
-        });
-      }
-    } catch (e) {
-      setState(() {
-        customerFlutterToast(
-            "An error occurred while Reset Password in. Please try again later.");
-      });
-      print('Error: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+  final ReConfirmData reConfirmData = ReConfirmData(Curd());
 
   Future<void> _confirmEmail() async {
-    final email = _emailController.text.trim();
-
-    if (!_email.currentState!.validate()) {
-      return;
-    }
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final url = Uri.parse('https://example.com/api/login');
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': email,
-        }),
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        customerFlutterToast(
-            "Email confirmed successful",
-            Colors.amber);
-        if(mounted){
-          Navigator.pushReplacementNamed(context, LogInScreen.routeName);
+    if (!_isLoading) {
+      {
+        if (!_emailFormKey.currentState!.validate()) {
+          return;
         }
-      } else {
-        final errorData = jsonDecode(response.body);
+
         setState(() {
-          _errorMessage =
-              errorData['message'] ?? 'Invalid credentials';
-          customerFlutterToast(_errorMessage!);
+          _isLoading = true;
+          _errorMessage = null;
         });
+
+        try {
+          final result = await reConfirmData.login(
+              email: _emailController.text.trim());
+
+          final state = handleRequest(result);
+          if (state == RequestState.loaded) {
+            customerFlutterToast("Confirmation email seated ", green);
+            // Navigate to Home Screen or Dashboard Screen page
+            if (mounted) {
+              Navigator.pushReplacementNamed(
+                  context, LogInScreen.routeName);
+            }
+            // Example
+          } else if (state == RequestState.internetFailure) {
+            customerFlutterToast("No internet connection", red);
+          } else if (state == RequestState.unauthorised) {
+            customerFlutterToast("Invalid User email ", red);
+          } else {
+            customerFlutterToast("ReConfirm email failed: $state", red);
+          }
+        } catch (e) {
+          setState(() {
+            _errorMessage =
+                "An error occurred. Please try again later.";
+          });
+          customerFlutterToast(_errorMessage!, red);
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
-    } catch (e) {
-      setState(() {
-        customerFlutterToast(
-            "An error occurred while Confirm Email . Please try again later.");
-      });
-      print('Error: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      bottomNavigationBar: LoginBottNaveBare(
+        title: "Don't Have Account?",
+        subTitle: "Sign In",
+        onPressed: () {
+          Navigator.pushReplacementNamed(
+              context, SigInScreen.routeName);
+        },
+      ),
+      backgroundColor: backgroundColorLight,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -160,7 +124,7 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
                   textInputType: TextInputType.emailAddress,
                   controller: _emailController,
                   message: 'Email can\'t be empty',
-                  formKey: _email,
+                  formKey: _emailFormKey,
                   icon: const Icon(Icons.email),
                   hintText: 'Email:',
                   onFieldSubmitted: (value) {
@@ -173,13 +137,15 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
               if (_isLoading)
                 const Center(
                     child: CircularProgressIndicator(
-                      color: Colors.amber,
-                    ))
+                  color: primaryColor,
+                ))
               else
                 CustomerButton(
                   title: 'Resend Email',
-                  onPressed: _resendEmail,
+                  onPressed: _confirmEmail,
                 ),
+              SizedBox(height: 20),
+              const CustomerOrWidget(),
             ],
           ),
         ),

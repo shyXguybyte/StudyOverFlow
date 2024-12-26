@@ -1,12 +1,14 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:home_function/constants/Colors.dart';
-import 'package:home_function/constants/calendar_settings.dart';
-import 'package:home_function/Model/meeting_data_source.dart';
-import 'package:home_function/View/screens/calender/widgets/add_appointment_dialog.dart';
+
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+
+import '../../../core/class/calendar_settings.dart';
+import '../../../core/const/app_color.dart';
+import '../../../model/local/home/meeting_data_source.dart';
+import '../widget/add_appointment_dialog.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -268,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final String endTimeText =
           DateFormat('hh:mm a').format(appointmentDetails.endTime).toString();
       final String timeDetails = '$startTimeText - $endTimeText';
-      final String? description =
+      final String description =
           appointmentDetails.notes ?? "No description available";
 
       showDialog(
@@ -298,7 +300,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    description!,
+                    description,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 15,

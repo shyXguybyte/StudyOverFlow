@@ -15,7 +15,8 @@ class SigInRemoteData {
     required String phone,
     required String password,
   }) async {
-    final response = await curd.post(AppLinks.loginUrl, {
+    final response = await curd.post(
+    "https://studyoverflow.runasp.net/api/Account/register", {
       "firstName": firstName,
       "lastName": lastName,
       "userName": userName,

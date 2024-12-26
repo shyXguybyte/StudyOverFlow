@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:study_over_flow/view/auth/screen/sig_in_screen.dart';
 
+import '../../../core/const/app_color.dart';
+
 class LoginBottNaveBare extends StatelessWidget {
   const LoginBottNaveBare(
       {super.key,
@@ -24,7 +26,7 @@ class LoginBottNaveBare extends StatelessWidget {
             title,
             style: TextStyle(
                 fontFamily: "intel",
-                color: Colors.grey[600],
+                color: grey600,
                 fontSize: 16,
                 fontWeight: FontWeight.w500),
           ),
@@ -37,7 +39,7 @@ class LoginBottNaveBare extends StatelessWidget {
                 fontFamily: "intel",
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
-                color: Colors.amber,
+                color: primaryColor,
               ),
             ),
           )

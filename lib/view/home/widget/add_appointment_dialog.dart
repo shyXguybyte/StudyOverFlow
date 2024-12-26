@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:home_function/constants/Colors.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../../core/const/app_color.dart';
+
 class AddAppointmentDialog extends StatefulWidget {
+  const AddAppointmentDialog({super.key});
+
   @override
   State<AddAppointmentDialog> createState() => _AddAppointmentDialogState();
 }
@@ -46,10 +49,10 @@ class _AddAppointmentDialogState extends State<AddAppointmentDialog> {
                   });
                 }
               },
+              iconAlignment: IconAlignment.end,
               child: Text(
                 "📍 Select Date: ${_selectedDay.toLocal().toString().split(' ')[0]}",
               ),
-              iconAlignment: IconAlignment.end,
             ),
             //Time Picker
             TextButton(
