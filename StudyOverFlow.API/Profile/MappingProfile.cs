@@ -18,8 +18,10 @@ namespace StudyOverFlow.API.Profile
                 ;
 
             CreateMap<Model.Task, TaskDto>()
-                
+            
                 .ReverseMap();
+
+            CreateMap<EventDto,Event>().ReverseMap();
             CreateMap<Model.Note, NoteDto>()
                 .ForMember(dest => dest.Text, src=>src.MapFrom(c=>c.text))
                 .ReverseMap();
