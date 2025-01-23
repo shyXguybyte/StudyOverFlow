@@ -11,6 +11,7 @@ namespace StudyOverFlow.API.Model
         public List<KanbanList> KanbanLists { get; set; }
         public Calendar Calendar { get; set; }
         public List<langchain_pg_embedding> Embeddings { get; set; }   
+        public List<Note> Notes { get; set; }   
 
         public string FullName()
         {

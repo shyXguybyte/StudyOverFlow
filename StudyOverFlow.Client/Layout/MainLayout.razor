@@ -2,24 +2,30 @@
 @inherits LayoutComponentBase
 @inject IAccountManagement accountmanager
 @inject NavigationManager Navigation
+<RadzenComponents @rendermode="@RenderMode.InteractiveAuto" />
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-           @*  <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a> *@
-           <button class="btn btn-primary" @onclick="Logout"> logout</button>
+    <div class="bg-white p-1 d-flex align-items-stretch " style=" height:100vh;">
+        <div class="sidebar rounded-3 h-100 ">
+            <NavMenu />
         </div>
 
-        <article class="content px-4">
+    </div>
+
+    
+
+    <main class="d-flex flex-column">
+        <div class="top-row px-4">
+            @*  <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a> *@
+            <button class="btn btn-primary" @onclick="Logout"> logout</button>
+        </div>
+
+        <article class="content pt-4 px-4 d-flex flex-grow-1">
             @Body
         </article>
     </main>
-</div>
+    </div>
 
-@code{
+@code {
     public async Task Logout()
     {
         await accountmanager.LogoutAsync();

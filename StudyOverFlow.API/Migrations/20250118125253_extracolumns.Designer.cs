@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pgvector;
@@ -12,9 +13,11 @@ using StudyOverFlow.API.Data;
 namespace StudyOverFlow.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250118125253_extracolumns")]
+    partial class extracolumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,7 +258,7 @@ namespace StudyOverFlow.API.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Calendars", (string)null);
+                    b.ToTable("Calendars");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.Color", b =>
@@ -272,7 +275,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasKey("ColorId");
 
-                    b.ToTable("Colors", (string)null);
+                    b.ToTable("Colors");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.Event", b =>
@@ -329,7 +332,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.KanbanList", b =>
@@ -355,7 +358,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("KanbanLists", (string)null);
+                    b.ToTable("KanbanLists");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.MaterialObj", b =>
@@ -391,7 +394,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("MaterialObjs", (string)null);
+                    b.ToTable("MaterialObjs");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.Note", b =>
@@ -417,8 +420,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.Property<string>("text")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("text");
 
                     b.HasKey("NoteId");
 
@@ -428,7 +430,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notes", (string)null);
+                    b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.Subject", b =>
@@ -463,7 +465,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Subjects", (string)null);
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.Tag", b =>
@@ -488,7 +490,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("ColorId");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.Task", b =>
@@ -534,7 +536,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.TaskKanbanList", b =>
@@ -552,7 +554,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("KanbanListId");
 
-                    b.ToTable("TaskKanbanLists", (string)null);
+                    b.ToTable("TaskKanbanLists");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.TaskTag", b =>
@@ -567,7 +569,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("TaskTags", (string)null);
+                    b.ToTable("TaskTags");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.langchain_pg_collection", b =>
@@ -586,7 +588,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasKey("uuid");
 
-                    b.ToTable("Langchain_Pg_Collections", (string)null);
+                    b.ToTable("Langchain_Pg_Collections");
                 });
 
             modelBuilder.Entity("StudyOverFlow.API.Model.langchain_pg_embedding", b =>
@@ -619,7 +621,7 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Langchain_Pg_Embeddings", (string)null);
+                    b.ToTable("Langchain_Pg_Embeddings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

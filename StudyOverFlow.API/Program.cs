@@ -9,9 +9,11 @@ using StudyOverFlow.API.MiddleWare;
 using StudyOverFlow.API.Model;
 using StudyOverFlow.API.Profile;
 using StudyOverFlow.API.Services;
+using StudyOverFlow.API.Services.Caching;
 using StudyOverFlow.API.settings;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,7 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IEmailBodyBuilder, EmailBodyBuilder>();
 builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedEmail = true;
@@ -30,13 +33,21 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
   .AddDefaultTokenProviders();
 //builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsFactory>();
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+builder.Services.AddScoped<IRedisCacheService, RedisCachService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o => o.UseVector()));
+//builder.Services.AddStackExchangeRedisCache( options =>
+//{
+//    options.Configuration = builder.Configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("Connection string 'redis' not found.");
+//    options.InstanceName = "StudyOverFlow";
+
+//});
+builder.Services.AddMemoryCache();
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -70,11 +81,11 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseRouting();

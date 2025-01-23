@@ -87,7 +87,7 @@ namespace StudyOverFlow.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.UserName);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) return Unauthorized("Invalid Usern Name or Password !");
             if (user.EmailConfirmed == false) return Unauthorized("Please confirm your email !");
 

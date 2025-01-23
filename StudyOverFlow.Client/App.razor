@@ -1,4 +1,5 @@
-﻿<CascadingAuthenticationState>
+﻿<RadzenTheme Theme="material" @rendermode="@RenderMode.InteractiveAuto" />
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeView Context="AppAuthState">
@@ -25,5 +26,5 @@
             </LayoutView>
         </NotFound>
     </Router>
-
 </CascadingAuthenticationState>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>

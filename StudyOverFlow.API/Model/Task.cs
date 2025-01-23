@@ -7,7 +7,7 @@
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public DateTime StartDate { get; set; } 
-        public DateTime EndDate { get; set; } 
+        public DateTime? EndDate { get; set; } 
         public bool IsChecked { get; set; }
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }   
