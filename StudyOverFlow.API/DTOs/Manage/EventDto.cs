@@ -1,4 +1,5 @@
 ﻿using StudyOverFlow.API.Model;
+using System.Text.Json.Serialization;
 
 namespace StudyOverFlow.API.DTOs.Manage
 {
@@ -6,12 +7,13 @@ namespace StudyOverFlow.API.DTOs.Manage
     {
 
         public int? EventId { get; set; }
+        public string Title { get; set; }   
         public string? Description { get; set; }
         public int? TotalCount { get; set; }
         public int? CurrentCount { get; set; } = 0;
-        public Day Day { get; set; }
-        public TimeOnly StartTime { get; set; }
-        public TimeOnly EndTime { get; set; }
+        public DateTime Date { get; set; }
+        
+        public WriteObject DurationSpan { get; set; }
         public int? SubjectId { get; set; }
 
         public int? TagId { get; set; }

@@ -54,25 +54,58 @@ namespace StudyOverFlow.API.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-
-            MailMessage message = new MailMessage()
+            MailMessage message;
+            if (_webHostEnvironment.IsDevelopment())
             {
+                message = new MailMessage()
+                {
 
-                From = new MailAddress(_mailSettings.Email!, _mailSettings.DisplayName),
-                Body = htmlMessage,
-                Subject = subject,
-                IsBodyHtml = true,
+                    From = new MailAddress(_mailSettings.Email!, _mailSettings.DisplayName),
+                    Body = htmlMessage,
+                    Subject = subject,
+                    IsBodyHtml = true,
 
-            };
+                };
+            }
+            else
+            {
+                message = new MailMessage()
+                {
+
+                    From = new MailAddress(Environment.GetEnvironmentVariable("MailSettingsEmail")!, _mailSettings.DisplayName),
+                    Body = htmlMessage,
+                    Subject = subject,
+                    IsBodyHtml = true,
+
+                };
+            }
+
             message.To.Add(_webHostEnvironment.IsDevelopment() ? "faresahmed687@gmail.com" : email);
-            SmtpClient smtpClient = new SmtpClient(_mailSettings.Host)
-            {
-                Port = _mailSettings.Port,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(_mailSettings.Email, _mailSettings.Password),
-                EnableSsl = true,
 
-            };
+            SmtpClient smtpClient;
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                smtpClient = new SmtpClient(_mailSettings.Host)
+                {
+                    Port = _mailSettings.Port,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(_mailSettings.Email, _mailSettings.Password),
+                    EnableSsl = true,
+
+                };
+            }
+            else
+            {
+                smtpClient = new SmtpClient(_mailSettings.Host)
+                {
+                    Port = _mailSettings.Port,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(Environment.GetEnvironmentVariable("MailSettingsEmail"), Environment.GetEnvironmentVariable("MailSettingsPass")!),
+                    EnableSsl = true,
+
+                };
+            }
+
             await smtpClient.SendMailAsync(message);
             smtpClient.Dispose();
 

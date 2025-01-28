@@ -37,7 +37,13 @@ builder.Services.AddScoped<IRedisCacheService, RedisCachService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddEndpointsApiExplorer();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+if(string.IsNullOrEmpty(connectionString))
+    connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+
+
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o => o.UseVector()));
 //builder.Services.AddStackExchangeRedisCache( options =>

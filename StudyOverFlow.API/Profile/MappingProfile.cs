@@ -10,7 +10,7 @@ namespace StudyOverFlow.API.Profile
         public MappingProfile()
         {
             CreateMap<RegisterDto, ApplicationUser>()
-                .ForMember(Dest =>Dest.Email , src=>src.MapFrom(c=>c.Email))
+                .ForMember(Dest => Dest.Email, src => src.MapFrom(c => c.Email))
                 .ForMember(Dest => Dest.FirstName, src => src.MapFrom(c => c.FirstName))
                 .ForMember(Dest => Dest.LastName, src => src.MapFrom(c => c.LastName))
                 .ForMember(Dest => Dest.UserName, src => src.MapFrom(c => c.UserName))
@@ -18,12 +18,17 @@ namespace StudyOverFlow.API.Profile
                 ;
 
             CreateMap<Model.Task, TaskDto>()
-            
-                .ReverseMap();
 
-            CreateMap<EventDto,Event>().ReverseMap();
+                .ReverseMap();
+            CreateMap<Event, EventDto>()
+    .ForMember(Dest => Dest.DurationSpan, src => src.MapFrom(c => new WriteObject { Hours= c.DurationSpan.Hours, Minutes= c.DurationSpan.Minutes}   ));
+
+
+
+            CreateMap<EventDto, Event>()
+                .ForMember(Dest => Dest.DurationSpan, src => src.MapFrom(c => new TimeSpan(c.DurationSpan.Hours, c.DurationSpan.Minutes, 0)));
             CreateMap<Model.Note, NoteDto>()
-                .ForMember(dest => dest.Text, src=>src.MapFrom(c=>c.text))
+                .ForMember(dest => dest.Text, src => src.MapFrom(c => c.text))
                 .ReverseMap();
             //CreateMap<Model.Subject, SubjectDto>().ReverseMap();   
             CreateMap<Subject, SubjectDto>()
@@ -62,7 +67,7 @@ namespace StudyOverFlow.API.Profile
 
 
 
-         
+
         }
     }
 }

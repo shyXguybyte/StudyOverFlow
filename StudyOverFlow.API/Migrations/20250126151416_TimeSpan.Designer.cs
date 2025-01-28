@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pgvector;
@@ -12,9 +13,11 @@ using StudyOverFlow.API.Data;
 namespace StudyOverFlow.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250126151416_TimeSpan")]
+    partial class TimeSpan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,13 +304,13 @@ namespace StudyOverFlow.API.Migrations
                     b.Property<int>("DurationSpan")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("KanbanListId")
+                    b.Property<int>("KanbanListId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("SubjectId")
+                    b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TagId")
+                    b.Property<int>("TagId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
@@ -700,15 +703,21 @@ namespace StudyOverFlow.API.Migrations
 
                     b.HasOne("StudyOverFlow.API.Model.KanbanList", "KanbanList")
                         .WithMany("Events")
-                        .HasForeignKey("KanbanListId");
+                        .HasForeignKey("KanbanListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyOverFlow.API.Model.Subject", "Subject")
                         .WithMany("Events")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyOverFlow.API.Model.Tag", "Tag")
                         .WithMany("Events")
-                        .HasForeignKey("TagId");
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Calendar");
 
